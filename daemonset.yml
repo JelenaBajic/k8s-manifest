@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset
+spec:
+  selector:
+    matchLabels:
+      app: daemonset-pod
+  template:
+    metadata:
+      labels:
+        app: daemonset-pod
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:1.27
+        command: ['sh', '-c', 'while true; do rm -rf /daemonset-temp/*; sleep 60; done']
+        volumeMounts:
+        - name: daemonset-tmp
+          mountPath: /daemonset-temp
+      volumes:
+      - name: daemonset-tmp
+        hostPath:
+          path: /etc/daemonset/tmp

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-frontend-deployment
+spec:
+  replicas: 3  
+  selector:
+    matchLabels:
+      app: web-frontend  #  labels of the pod template
+  template:
+    metadata:
+      labels:
+        app: web-frontend  
+    spec:
+      containers:
+      - name: web-frontend
+        image: nginx:1.19.1  
+        ports:
+        - containerPort: 80  # targetPort in the service
+---
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: web-frontend-svc 
+spec: 
+  type: NodePort 
+  selector: 
+    app: web-frontend 
+  ports: 
+  - protocol: TCP 
+    port: 80 
+    targetPort: 80 
+    nodePort: 30080        

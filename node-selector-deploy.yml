@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+spec:
+  replicas: 3  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: test-app  # This should match the labels of the pod template
+  template:
+    metadata:
+      labels:
+        app: test-app  # This label should match the selector
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: my-node-name 
+      containers:
+      - name: test-con
+        image: nginx:1.19.1
+        ports:
+        - containerPort: 80
+      initContainers:
+      - name: init-test-pod
+        image: busybox:1.27
+        command: ['sh', '-c', 'until nslookup test-svc; do echo waiting for test-svc; sleep 2; done']
